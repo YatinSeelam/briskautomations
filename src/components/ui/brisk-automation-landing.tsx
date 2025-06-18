@@ -243,6 +243,7 @@ const BriskAutomationLanding: React.FC = () => {
       >
         <nav className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
+            {/* Logo */}
             <div className="flex-shrink-0">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -294,11 +295,12 @@ const BriskAutomationLanding: React.FC = () => {
                   </motion.div>
                 </motion.div>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-[#2D1A53]">BRISK AUTOMATIONS</span>
+                  <span className="text-xl md:text-2xl font-bold text-[#2D1A53]">BRISK AUTOMATIONS</span>
                 </div>
               </motion.div>
             </div>
 
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               {navItems.map((item) => (
                 <a
@@ -312,48 +314,124 @@ const BriskAutomationLanding: React.FC = () => {
               ))}
             </div>
 
+            {/* Right side buttons */}
             <div className="flex items-center space-x-4">
+              {/* Desktop CTA Button */}
               <motion.a
                 href="#contact"
-                className="bg-[#C89BA1] text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200"
+                className="hidden md:block bg-[#C89BA1] text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200"
                 whileHover={{ scale: 1.02, x: 2 }}
                 whileTap={{ scale: 0.98 }}
               >
                 Let's Talk
               </motion.a>
 
-              <button
-                className="md:hidden text-[#A1ACB5] hover:text-[#2D1A53] transition-colors"
+              {/* Mobile Menu Button */}
+              <motion.button
+                className="md:hidden relative z-50 p-2 text-[#A1ACB5] hover:text-[#2D1A53] transition-colors focus:outline-none"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label="Toggle menu"
+                whileTap={{ scale: 0.95 }}
               >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
+                <motion.div
+                  className="w-6 h-6 flex flex-col justify-center items-center"
+                  animate={isMobileMenuOpen ? "open" : "closed"}
+                >
+                  <motion.span
+                    className="w-6 h-0.5 bg-current block mb-1.5"
+                    variants={{
+                      closed: { rotate: 0, y: 0 },
+                      open: { rotate: 45, y: 2 }
+                    }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  <motion.span
+                    className="w-6 h-0.5 bg-current block mb-1.5"
+                    variants={{
+                      closed: { opacity: 1 },
+                      open: { opacity: 0 }
+                    }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  <motion.span
+                    className="w-6 h-0.5 bg-current block"
+                    variants={{
+                      closed: { rotate: 0, y: 0 },
+                      open: { rotate: -45, y: -2 }
+                    }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </motion.div>
+              </motion.button>
             </div>
           </div>
 
+          {/* Mobile Menu */}
           <AnimatePresence>
             {isMobileMenuOpen && (
-              <motion.div
-                variants={mobileMenuVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-[#2D1A53]/10 shadow-xl"
-              >
-                <div className="px-6 py-4 space-y-4">
-                  {navItems.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="block text-sm font-medium text-[#8B9299] hover:text-[#2D1A53] transition-colors duration-200"
-                      onClick={() => setIsMobileMenuOpen(false)}
+              <>
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="md:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                />
+
+                {/* Mobile Menu Panel */}
+                <motion.div
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-[#2D1A53]/10 shadow-xl z-50 max-h-screen overflow-y-auto"
+                >
+                  <div className="px-6 py-6 space-y-4">
+                    {/* Navigation Items */}
+                    {navItems.map((item, index) => (
+                      <motion.a
+                        key={item.name}
+                        href={item.href}
+                        className="block text-lg font-medium text-[#8B9299] hover:text-[#2D1A53] transition-colors duration-200 py-3 border-b border-[#2D1A53]/10 last:border-b-0"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                      >
+                        {item.name}
+                      </motion.a>
+                    ))}
+
+                    {/* Mobile CTA Button */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: navItems.length * 0.1 }}
+                      className="pt-4"
                     >
-                      {item.name}
-                    </a>
-                  ))}
-                </div>
-              </motion.div>
+                      <a
+                        href="#contact"
+                        className="block w-full bg-[#C89BA1] text-white px-6 py-4 rounded-lg text-lg font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200 text-center"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Let's Talk
+                      </a>
+                    </motion.div>
+
+                    {/* Additional Info */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 0.5 }}
+                      className="pt-4 text-center text-sm text-[#8B9299]"
+                    >
+                      <p>Ready to automate your business?</p>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </>
             )}
           </AnimatePresence>
         </nav>
@@ -457,6 +535,7 @@ const BriskAutomationLanding: React.FC = () => {
           </motion.div>
         </div>
       </main>
+
 
       {/* Hidden Cost Section */}
       <section className="py-20 px-6 lg:px-8 relative overflow-hidden">
@@ -864,7 +943,7 @@ const BriskAutomationLanding: React.FC = () => {
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Services Section - Replace the existing Services Section with this */}
       <section id="services" className="py-20 px-6 lg:px-8 relative overflow-hidden">
         {/* Advanced Background Elements */}
         <div
@@ -1016,45 +1095,73 @@ const BriskAutomationLanding: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              Luxury-grade automation infrastructure for discerning enterprises
+              Meet our AI specialists trained for specific business functions
             </motion.p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: Target,
-                title: "Lead Generation Engine",
-                description: "Precision-engineered lead acquisition with real-time enrichment",
-                metrics: { leads: "10K+", accuracy: "94%", speed: "24/7" },
+                name: "Cassie B.",
+                specialty: "AI Customer Support",
+                description: "Handles customer inquiries, tickets, and support workflows 24/7 with human-like responses",
+                avatar: "👩‍💼",
+                available: true,
+                route: "/cassie-b",
                 gradient: "from-[#2D1A53]/15 via-[#4A3B7A]/8 to-transparent",
                 accentColor: "from-[#2D1A53] to-[#4A3B7A]"
               },
               {
-                icon: Users,
-                title: "Recruiting Automations",
-                description: "Intelligent candidate screening with seamless workflow integration",
-                metrics: { time: "70%", quality: "85%", response: "3x" },
+                name: "Seona B.",
+                specialty: "SEO & Content Optimization",
+                description: "Creates and optimizes content for search engine rankings automatically",
+                avatar: "👩‍💻",
+                available: false,
+                route: null,
                 gradient: "from-[#C89BA1]/15 via-[#D4A0A7]/8 to-transparent",
                 accentColor: "from-[#C89BA1] to-[#D4A0A7]"
               },
               {
-                icon: Cloud,
-                title: "Cloud Orchestration",
-                description: "Self-optimizing infrastructure with predictive scaling",
-                metrics: { savings: "35%", uptime: "99.9%", scale: "Auto" },
+                name: "Leida B.",
+                specialty: "Lead Generation",
+                description: "Finds, qualifies, and nurtures potential customers through intelligent automation",
+                avatar: "👩‍🎯",
+                available: false,
+                route: null,
                 gradient: "from-[#8B6B8F]/15 via-[#2D1A53]/8 to-transparent",
                 accentColor: "from-[#8B6B8F] to-[#2D1A53]"
               },
               {
-                icon: Bot,
-                title: "Custom Model Training",
-                description: "Bespoke AI models trained on your proprietary datasets",
-                metrics: { accuracy: "96%", latency: "<100ms", models: "Custom" },
+                name: "Caleb B.",
+                specialty: "Sales & Appointments",
+                description: "Schedules meetings and manages your sales calendar with intelligent booking",
+                avatar: "👨‍💼",
+                available: true,
+                route: "/caleb-b",
                 gradient: "from-[#4A3B7A]/15 via-[#C89BA1]/8 to-transparent",
                 accentColor: "from-[#4A3B7A] to-[#C89BA1]"
+              },
+              {
+                name: "Emilia B.",
+                specialty: "Email Marketing",
+                description: "Crafts personalized email campaigns and nurture sequences automatically",
+                avatar: "👩‍📧",
+                available: false,
+                route: null,
+                gradient: "from-[#2D1A53]/15 via-[#8B6B8F]/8 to-transparent",
+                accentColor: "from-[#2D1A53] to-[#8B6B8F]"
+              },
+              {
+                name: "Fiona B.",
+                specialty: "Process Automation",
+                description: "Streamlines workflows and automates repetitive business tasks intelligently",
+                avatar: "👩‍⚙️",
+                available: false,
+                route: null,
+                gradient: "from-[#C89BA1]/15 via-[#4A3B7A]/8 to-transparent",
+                accentColor: "from-[#C89BA1] to-[#4A3B7A]"
               }
-            ].map((service, index) => (
+            ].map((specialist, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 40 }}
@@ -1064,174 +1171,104 @@ const BriskAutomationLanding: React.FC = () => {
                 className="group relative"
               >
                 {/* Enhanced Glow Effect */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-700 opacity-60 group-hover:opacity-100`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${specialist.gradient} rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-700 opacity-60 group-hover:opacity-100`} />
 
                 <motion.div
-                  className="relative overflow-hidden rounded-3xl transition-all duration-500 group-hover:shadow-2xl"
+                  className={`relative overflow-hidden rounded-3xl transition-all duration-500 group-hover:shadow-2xl ${!specialist.available ? 'opacity-75' : ''
+                    }`}
                   style={{
                     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%)',
                     backdropFilter: 'blur(20px)',
                     border: '1px solid rgba(255, 255, 255, 0.3)',
                     boxShadow: '0 8px 32px rgba(45, 26, 83, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
                   }}
-                  whileHover={{
+                  whileHover={specialist.available ? {
                     scale: 1.02,
                     rotateX: 2,
                     rotateY: 2,
-                  }}
+                  } : {}}
                   transition={{ duration: 0.3 }}
                 >
-                  {/* Animated Background Pattern */}
-                  <div className="absolute inset-0 opacity-5">
-                    <motion.div
-                      className="absolute inset-0"
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23${service.accentColor.includes('2D1A53') ? '2D1A53' : 'C89BA1'}' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                      }}
-                      animate={{
-                        backgroundPosition: ['0% 0%', '100% 100%'],
-                      }}
-                      transition={{
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    />
-                  </div>
+                  {/* Coming Soon Overlay for locked products */}
+                  {!specialist.available && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/20 to-[#C89BA1]/20 backdrop-blur-sm rounded-3xl flex items-center justify-center z-10">
+                      <div className="text-center">
+                        <motion.div
+                          className="w-16 h-16 bg-gradient-to-br from-[#2D1A53] to-[#4A3B7A] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"
+                          animate={{
+                            scale: [1, 1.1, 1],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                        </motion.div>
+                        <span className="bg-[#C89BA1] text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                          Coming Soon
+                        </span>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="relative p-8">
-                    <div className="flex items-start gap-6">
+                    <div className="text-center space-y-6">
+                      {/* Avatar */}
                       <motion.div
-                        className="flex-shrink-0 relative"
-                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        className="relative inline-block"
+                        whileHover={specialist.available ? { scale: 1.1, rotate: 5 } : {}}
                         transition={{ duration: 0.3 }}
                       >
-                        <div className={`relative w-16 h-16 bg-gradient-to-br ${service.accentColor} rounded-2xl flex items-center justify-center shadow-lg`}>
-                          <service.icon className="w-8 h-8 text-white" />
-                          <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl" />
-
-                          {/* Pulsing Ring */}
-                          <motion.div
-                            className="absolute inset-0 border-2 border-white/30 rounded-2xl"
-                            animate={{
-                              scale: [1, 1.2, 1],
-                              opacity: [0.5, 0, 0.5],
-                            }}
-                            transition={{
-                              duration: 3,
-                              repeat: Infinity,
-                              ease: "easeInOut",
-                            }}
-                          />
+                        <div className={`relative w-20 h-20 bg-gradient-to-br ${specialist.accentColor} rounded-full flex items-center justify-center mx-auto shadow-lg text-3xl`}>
+                          {specialist.avatar}
+                          <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-full" />
                         </div>
+                        {specialist.available && (
+                          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                            <div className="w-3 h-3 bg-white rounded-full"></div>
+                          </div>
+                        )}
                       </motion.div>
 
-                      <div className="flex-1 space-y-6">
-                        <div>
-                          <h3 className="text-xl font-bold text-[#2D1A53] mb-3">{service.title}</h3>
-                          <p className="text-[#8B9299] leading-relaxed">{service.description}</p>
+                      {/* Content */}
+                      <div>
+                        <h3 className="text-xl font-bold text-[#2D1A53] mb-2">{specialist.name}</h3>
+                        <div className="inline-block bg-[#C89BA1]/20 text-[#2D1A53] px-3 py-1 rounded-full text-sm font-semibold mb-3">
+                          {specialist.specialty}
                         </div>
-
-                        <div className="grid grid-cols-3 gap-4">
-                          {Object.entries(service.metrics).map(([key, value], metricIndex) => (
-                            <motion.div
-                              key={key}
-                              className="text-center p-3 rounded-xl backdrop-blur-sm border border-white/20"
-                              style={{
-                                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%)',
-                              }}
-                              whileHover={{ scale: 1.05, y: -2 }}
-                              transition={{ duration: 0.2 }}
-                              initial={{ opacity: 0, y: 20 }}
-                              whileInView={{ opacity: 1, y: 0 }}
-                              viewport={{ once: true }}
-                            >
-                              <motion.div
-                                className="text-lg font-bold text-[#2D1A53]"
-                                initial={{ scale: 0.8 }}
-                                whileInView={{ scale: 1 }}
-                                transition={{ duration: 0.3, delay: (index * 0.15) + (metricIndex * 0.05) }}
-                                viewport={{ once: true }}
-                              >
-                                {value}
-                              </motion.div>
-                              <div className="text-xs text-[#8B9299] capitalize">{key}</div>
-                            </motion.div>
-                          ))}
-                        </div>
-
-                        <motion.div
-                          className="flex items-center gap-2 text-[#2D1A53] font-medium cursor-pointer opacity-0 group-hover:opacity-100 transition-all duration-300"
-                          whileHover={{ x: 5 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <span>Explore capabilities</span>
-                          <ArrowRight className="w-4 h-4" />
-                        </motion.div>
+                        <p className="text-[#8B9299] leading-relaxed text-sm">{specialist.description}</p>
                       </div>
+
+                      {/* Action Button */}
+                      {specialist.available && specialist.route ? (
+                        <Link to={specialist.route}>
+                          <motion.button
+                            className="inline-flex items-center gap-2 bg-[#C89BA1] text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200 shadow-lg hover:shadow-xl"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            Meet {specialist.name.split(' ')[0]}
+                            <ArrowRight size={16} />
+                          </motion.button>
+                        </Link>
+                      ) : (
+                        <button
+                          disabled
+                          className="inline-flex items-center gap-2 bg-gray-400 text-white px-6 py-3 rounded-lg text-sm font-semibold cursor-not-allowed opacity-60"
+                        >
+                          Coming Soon
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 616 0z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </motion.div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Process Section */}
-      <section id="process" className="py-20 px-6 lg:px-8 bg-white/30 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold text-[#2D1A53] mb-6">
-              3-Step Launch
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                step: "01",
-                title: "Discuss",
-                description: "30 min call to map goals & KPIs",
-                icon: MessageSquare
-              },
-              {
-                step: "02",
-                title: "Build",
-                description: "Prototype your flow & AI model",
-                icon: Bot
-              },
-              {
-                step: "03",
-                title: "Go Live",
-                description: "Secure deployment + 24/7 monitoring",
-                icon: Zap
-              }
-            ].map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                className="text-center"
-              >
-                <div className="relative mb-8">
-                  <div className="w-20 h-20 bg-gradient-to-br from-[#2D1A53] to-[#4A3B7A] rounded-full flex items-center justify-center mx-auto mb-4">
-                    <step.icon className="w-10 h-10 text-white" />
-                  </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-[#C89BA1] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                    {step.step}
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold text-[#2D1A53] mb-4">{step.title}</h3>
-                <p className="text-[#8B9299] text-lg">{step.description}</p>
               </motion.div>
             ))}
           </div>
